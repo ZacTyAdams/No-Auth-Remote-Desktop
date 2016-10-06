@@ -4,11 +4,7 @@ Function createIT() 'Function for the IT account creator
 	Wscript.echo "done"
 end Function 'will need to set a password on this account at the end of the program'
 
-Function switchUser() 'this function will switch the current user to the IT profile'
-		
-End Function
-
-Function otherUserRun()'this just runs the chrome remote desktop application as the IT user instead of logging in'
+Function otherUserRun()'function obsolete due to windows 7 compatibility issues'
 	Set shell = CreateObject("WScript.Shell")
 	set fso = CreateObject("Scripting.FileSystemObject")
 	If(fso.FolderExists("C:\Program Files (x86)")) Then 'This if statement checks for the existence of the (x86) folder'
@@ -30,6 +26,31 @@ Function otherUserRun()'this just runs the chrome remote desktop application as 
 		shell.SendKeys "^+m"
 		WScript.Sleep 2000
 		shell.SendKeys "~"
+		WScript.Sleep 2000
+		shell.SendKeys "%{F4}"
+		WScript.Sleep 2000
+		shell.SendKeys "zac.adams@versacor.com"
+		WScript.Sleep 2000
+		shell.SendKeys "~"
+		WScript.Sleep 1000
+		shell.SendKeys "Lbsbgq33#"
+		WScript.Sleep 1000
+		shell.SendKeys "~"
+		WScript.Sleep 3000
+		shell.SendKeys "{TAB}"
+		WScript.Sleep 1000
+		shell.SendKeys "{TAB}"
+		WScript.Sleep 1000
+		shell.SendKeys "~"
+		WScript.Sleep 1000
+		shell.run "cmd /k runas /user:IT ""C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"""
+		WScript.Sleep 2000
+		shell.SendKeys "Lbsbgq33#"
+		WScript.Sleep 20000
+		shell.run "cmd /k runas /user:IT ""C:\Program Files (x86)\Google\Chrome\Application\chrome.exe  --profile-directory=Default --app-id=gbchcmhmhahfdphkhkmpfmihenigjmpp"""
+		WScript.Sleep 10000
+		shell.SendKeys "Lbsbgq33#"
+		shell.SendKeys "~"
 		'WScript.echo "command sent"
 	Else
 		WScript.echo "Error has occured opening Chrome under the correct user"
@@ -47,17 +68,11 @@ Function closeChrome()'this is only test function to test the compatibility of t
 End Function 
 
 Function tester()
-	set shell = CreateObject("WScript.Shell")
-	shell.run "cmd /c %windir%\System32\tsdiscon.exe"
-	Wscript.Sleep 5000
-	'shell.SendKeys "{RIGHT}~"
-	WScript.echo "ITS WORKINGGGG"
+	
 End Function
 
 createIT() 'will be necessary'
-'switchUser() 'Possibly not necessary
 closeChrome()
-otherUserRun()
-'tester()
-'only for testing remember to delete'
+'tester()'this is the function that send confirmation back to me'
+
 
