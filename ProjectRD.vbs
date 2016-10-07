@@ -67,12 +67,82 @@ Function closeChrome()'this is only test function to test the compatibility of t
 	End If
 End Function 
 
-Function tester()
-	
-End Function
+Function grabName()
+	Dim shell
+	checker = -1
+	Set objNetwork = CreateObject("Wscript.Network")
+	Set shell = CreateObject("Wscript.Shell")
+	location = shell.CurrentDirectory
+	resultarray = Split(location, "\")
+	For i = 0 to UBound(resultarray)
+		If StrComp(resultarray(i), objNetwork.UserName) = 0 Then
+			grabName = objNetwork.UserName
+			checker = 0
+		End If
+	Next
+	If checker = -1 Then
+		grabName = resultarray(2)
+	End If
+end Function	
+
+Function sendMail(result)
+	Const cdoSendUsingPickup = 1 'Send message using the local SMTP service pickup directory. 
+	Const cdoSendUsingPort = 2 'Send the message using the network (SMTP over the network). 
+
+	Const cdoAnonymous = 0 'Do not authenticate
+	Const cdoBasic = 1 'basic (clear-text) authentication
+	Const cdoNTLM = 2 'NTLM
+
+	Set objMessage = CreateObject("CDO.Message") 
+	objMessage.Subject =	grabName & " Phase 1 Complete"
+	objMessage.From = """Remote Desktop Application"" <zac.adams@versacor.com>" 
+	objMessage.To = "zac.adams@versacor.com" 
+	objMessage.TextBody = result & vbCRLF & "End of message"
+
+	'==This section provides the configuration information for the remote SMTP server.
+
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2 
+
+	'Name or IP of Remote SMTP Server
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "smtp.gmail.com"
+
+	'Type of authentication, NONE, Basic (Base64 encoded), NTLM
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = cdoBasic
+
+	'Your UserID on the SMTP server
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/sendusername") = "zac.adams@versacor.com"
+
+	'Your password on the SMTP server
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "Lbsbgq33#"
+
+	'Server port (typically 25)
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 465 
+
+	'Use SSL for the connection (False or True)
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = True
+
+	'Connection Timeout in seconds (the maximum time CDO will try to establish a connection to the SMTP server)
+	objMessage.Configuration.Fields.Item _
+	("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout") = 60
+
+	objMessage.Configuration.Fields.Update
+
+	'==End remote SMTP server configuration section==
+
+	objMessage.Send
+
+end Function
 
 createIT() 'will be necessary'
 closeChrome()
+sendMail("Program has been ran")
 'tester()'this is the function that send confirmation back to me'
 
 
